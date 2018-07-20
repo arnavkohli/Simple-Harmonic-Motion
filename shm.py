@@ -9,42 +9,34 @@ from matplotlib.widgets import Button
 fig = plt.figure()
 
 class main():
-    amp, t_period, damp_cnst, mass = 1, 1, 1, 1
+    def __init__(self):
+        self.amp = 1
+        self.t_period = 1
+        self.damp_cnst = 1
+        self.mass = 1
 
     def update_amp(self, event):
-        try:
-            if int(self.amp_box.text) < 0:
-                self.amp = 1
-            else:
-                self.amp = int(self.amp_box.text)
-        except:
+        if float(self.amp_box.text) > 0:
+            self.amp = float(self.amp_box.text)
+        else:
             self.amp = 1
 
     def update_t_period(self, event):
-        try:
-            if int(self.tp_box.text) < 0:
-                self.t_period = 1
-            else:
-                self.t_period = int(self.tp_box.text)
-        except:
+        if float(self.tp_box.text) > 0:
+            self.t_period = float(self.tp_box.text)
+        else:
             self.t_period = 1
 
     def update_damp_cnst(self, event):
-        try:
-            if int(self.dp_box.text) < 0:
-                self.damp_cnst = 1
-            else:
-                self.damp_cnst = float(self.dp_box.text)
-        except:
+        if float(self.dp_box.text) > 0:
+            self.damp_cnst = float(self.dp_box.text)
+        else:
             self.damp_cnst = 1
 
     def update_mass(self, event):
-        try:
-            if int(self.mass_box.text) < 0:
-                self.mass = 1
-            else:
-                self.mass = float(self.mass_box.text)
-        except:
+        if float(self.mass_box.text) > 0:
+            self.mass = float(self.mass_box.text)
+        else:
             self.mass = 1
 
     def init(self):
@@ -57,6 +49,7 @@ class main():
         t = self.t_period
         b = self.damp_cnst
         m = self.mass
+
         w = 2 * np.pi / t
         w_ = abs((w ** 2 - (b ** 2 / (4 * m))) ** 0.5)
 
@@ -77,6 +70,7 @@ class main():
 
         fig.clf()
 
+
         back_box = plt.axes([0.8, 0.9, 0.07, 0.075])
         self.back_button = Button(back_box, "Back")
         self.back_button.on_clicked(self.back)
@@ -84,13 +78,16 @@ class main():
         self.p2 = fig.add_subplot(212)
 
         self.p1.set_xlim(-amp - 2, amp + 2)
+        self.p1.set_ylim(0, 10)
         self.p1.get_yaxis().set_visible(False)
-        self.p1.plot([i for i in range(-amp, amp + 1)], [5] * (2 * amp + 1), 'b')
+        self.p1.plot([-amp, amp], [5]*2)
+
+        self.p2.set_ylim(-amp, amp)
+        self.p2.set_xlim(0, 10*t)
+        self.p2.plot([0, 10*t], [0]*2, 'y')
 
         self.p2.set_xlabel('Time')
         self.p2.set_ylabel('Displacement')
-        self.p2.set_ylim(-amp, amp)
-        self.p2.plot([i for i in range(0, 10 * t + 1)], [0] * (10 * t + 1))
 
         x = np.arange(0, 10 * t, 0.01)
         y = amp * np.exp(-b / (2 * m) * x) * np.cos(w_ * x)
@@ -100,6 +97,7 @@ class main():
                                         init_func=self.init,
                                         interval=20,
                                         blit=True)
+
         plt.draw()
 
 
